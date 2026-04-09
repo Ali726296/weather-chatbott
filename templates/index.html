@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Weather Chatbot</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #007BFF;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .chat-box {
+            height: 350px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user {
+            background: #DCF8C6;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .bot {
+            background: #f1f1f1;
+        }
+
+        .input-area {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+        }
+
+        button {
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="chat-container">
+    <div class="header">🤖 AI Weather Chatbot</div>
+
+    <div id="chatBox" class="chat-box"></div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Ask: weather in Pune">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+async function sendMessage() {
+    let input = document.getElementById("userInput").value;
+    let chatBox = document.getElementById("chatBox");
+
+    chatBox.innerHTML += `<div class="message user">${input}</div>`;
+
+    let res = await fetch("/get_weather", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: input })
+    });
+
+    let data = await res.json();
+
+    chatBox.innerHTML += `<div class="message bot">${data.reply}</div>`;
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+</script>
+
+</body>
+</html>
